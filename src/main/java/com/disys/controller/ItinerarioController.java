@@ -28,11 +28,16 @@ public class ItinerarioController {
 	@Autowired
 	private ItinerarioService itinerarioService;
 	
-	@GetMapping("/{idLinha}")
-	public ResponseEntity<Page<Itinerarios>> getItinerariosByLinha(@PathVariable Long idLinha ,@RequestParam int quantidade, 
+	@GetMapping("/")
+	public ResponseEntity<Page<Itinerarios>> getItinerariosByLinha(@RequestParam int quantidade, 
 			@RequestParam int pagina, @RequestParam(required = false) String nome) {
-		Pageable paginacao = PageRequest.of(pagina, quantidade, Sort.by("id").descending());
-		Page<Itinerarios> itinerariosPage=  itinerarioService.getItinerarios(idLinha, paginacao);
+		Pageable paginacao = PageRequest.of(pagina, quantidade);
+		Page<Itinerarios> itinerariosPage =  null;
+		if(nome != null) {
+			itinerariosPage = itinerarioService.getItinerariosByNome(nome, paginacao);
+		} else {
+			itinerariosPage = itinerarioService.getItinerarios(paginacao);
+		}
 		if(itinerariosPage.hasContent()) {
 			return ResponseEntity.status(HttpStatus.OK).body(itinerariosPage);
 		}

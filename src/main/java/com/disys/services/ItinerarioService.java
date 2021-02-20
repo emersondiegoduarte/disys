@@ -48,8 +48,8 @@ public class ItinerarioService {
 		
 	}
 	
-	public Page<Itinerarios> getItinerarios(Long linhaId,Pageable paginacao){
-		return itinerarioRepository.findByIdlinha(linhaId, paginacao);
+	public Page<Itinerarios> getItinerarios(Pageable paginacao){
+		return itinerarioRepository.findAll(paginacao);
 	}
 	
 	public void deleteItinerario(Long id) {
@@ -58,6 +58,10 @@ public class ItinerarioService {
 	
 	public Itinerarios getItinerario(Long id) {
 		return itinerarioRepository.findById(id).orElseGet(null);
+	}
+
+	public Page<Itinerarios> getItinerariosByNome(String nome, Pageable paginacao) {
+		return itinerarioRepository.findByNomeContainingIgnoreCase(nome, paginacao);
 	}
 	
 }

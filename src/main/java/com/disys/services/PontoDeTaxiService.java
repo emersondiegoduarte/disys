@@ -18,7 +18,7 @@ public class PontoDeTaxiService {
 	public List<PontoDeTaxi> listaPontoDeTaxi() {
 		List<PontoDeTaxi> pontos =  new ArrayList<PontoDeTaxi>();
 		try {
-			Files.lines(Paths.get("disys.csv")).forEach(line -> {
+			Files.lines(Paths.get("home/node/app/disys.csv")).forEach(line -> {
 				String [] linhas = line.split("#");
 				PontoDeTaxi ponto =  new PontoDeTaxi();
 				ponto.setNomeDoPonto(linhas[0]);
