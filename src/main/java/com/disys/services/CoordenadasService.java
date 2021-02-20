@@ -22,12 +22,12 @@ public class CoordenadasService {
 		List<Coordenadas> lista = coordenadasRepository.findAll();
 		List<Coordenadas> newLista = new ArrayList<Coordenadas>();
 		if(!lista.isEmpty()) {
-			for (Coordenadas coordenada : lista) {
+			lista.stream().forEach(coordenada -> {
 				double distance = Haversine.distance(Double.valueOf(latitude), Double.valueOf(longitude), Double.valueOf(coordenada.getLatitude()), Double.valueOf(coordenada.getLongitude()));
 				if(distance <= raio) {
 					newLista.add(coordenada);
 				}
-			}
+			});
 		}
 		
 		return newLista;
