@@ -23,7 +23,7 @@ public class CoordenadasService {
 		List<Coordenadas> newLista = new ArrayList<Coordenadas>();
 		if(!lista.isEmpty()) {
 			for (Coordenadas coordenada : lista) {
-				double distance = new Haversine().distance(Double.valueOf(latitude), Double.valueOf(longitude), Double.valueOf(coordenada.getLatitude()), Double.valueOf(coordenada.getLongitude()));
+				double distance = Haversine.distance(Double.valueOf(latitude), Double.valueOf(longitude), Double.valueOf(coordenada.getLatitude()), Double.valueOf(coordenada.getLongitude()));
 				if(distance <= raio) {
 					newLista.add(coordenada);
 				}
@@ -31,6 +31,11 @@ public class CoordenadasService {
 		}
 		
 		return newLista;
+	}
+
+	public Coordenadas store(Coordenadas coordenadas) {
+		// TODO Auto-generated method stub
+		return coordenadasRepository.save(coordenadas);
 	}
 
 }
