@@ -2,7 +2,14 @@ package com.disys.entities;
 
 import java.io.Serializable;
 
-//@Entity
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+@Entity
 public class LinhaOnibus implements Serializable{
 	
 	/**
@@ -10,16 +17,19 @@ public class LinhaOnibus implements Serializable{
 	 */
 	private static final long serialVersionUID = -7830352137032581371L;
 
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private String codigo;
 	
 	private String nome;
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Itinerarios intinerario;
 	
 	
-	//@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}
@@ -47,6 +57,16 @@ public class LinhaOnibus implements Serializable{
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+
+	public Itinerarios getIntinerario() {
+		return intinerario;
+	}
+
+
+	public void setIntinerario(Itinerarios intinerario) {
+		this.intinerario = intinerario;
 	}
 	
 	

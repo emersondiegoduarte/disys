@@ -1,10 +1,11 @@
 package com.disys.services;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.disys.entities.Coordenadas;
 import com.disys.entities.Itinerarios;
 import com.disys.entities.LinhaOnibus;
+import com.disys.repositories.LinhaOnibusRepository;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -23,6 +25,12 @@ public class LinhaOnibusService {
 
 	@Autowired
 	private WebClient webClient;
+	
+	@Autowired
+	private LinhaOnibusRepository linhaOnibusRepository;
+	
+	@Autowired
+	private ItinerarioService itinerarioService;
 	
 	public LinhaOnibus[] index(){
 		String url = "http://www.poatransporte.com.br/php/facades/process.php?a=nc&p=%&t=o"; //2
@@ -54,6 +62,37 @@ public class LinhaOnibusService {
 		Coordenadas userArray = gson.fromJson(linhas, userListType);
 		Itinerarios lista = gson.fromJson(linhas, Itinerarios.class);
 		return lista;
+	}
+	
+	public Page<LinhaOnibus> getLinhaOnibusByNome(String nome, Pageable paginacao){
+		return linhaOnibusRepository.findByNomeContaining(nome, paginacao);
+	}
+	
+	public LinhaOnibus store(LinhaOnibus linhaOnibus) {
+		List<LinhaOnibus> linha = linhaOnibusRepository.findByNome(linhaOnibus.getNome());
+		LinhaOnibus novaLinha = null;
+		if(linha.isEmpty()) {
+			if(linhaOnibus.getIntinerario() != null){
+				if(linhaOnibus.getIntinerario().getIdlinha() != null) {
+					Itinerarios itinerario = itinerarioService.getItinerario(linhaOnibus.getIntinerario().getIdlinha());
+					linhaOnibus.setIntinerario(itinerario);
+				} else {
+					linhaOnibus.getIntinerario().getCoordenadas().stream().forEach(coordenada -> coordenada.setItinerario(linhaOnibus.getIntinerario()));
+				}
+			}
+			novaLinha = linhaOnibusRepository.save(linhaOnibus);
+		}
+		
+		return novaLinha;
+		
+	}
+	
+	public Page<LinhaOnibus> getLinhasOnibus(Pageable paginacao){
+		return linhaOnibusRepository.findAll(paginacao);
+	}
+
+	public void deleteLinhaOnibus(Long id) {
+		linhaOnibusRepository.deleteById(id);
 	}
 	
 }
