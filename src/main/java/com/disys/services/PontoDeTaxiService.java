@@ -1,6 +1,8 @@
 package com.disys.services;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,15 +20,20 @@ public class PontoDeTaxiService {
 	public List<PontoDeTaxi> listaPontoDeTaxi() {
 		List<PontoDeTaxi> pontos =  new ArrayList<PontoDeTaxi>();
 		try {
-			Files.lines(Paths.get("home/node/app/disys.csv")).forEach(line -> {
-				String [] linhas = line.split("#");
+			
+			BufferedReader csv =  new BufferedReader(
+					new FileReader("disys.csv"));
+			String row = null;
+			while(( row = csv.readLine()) != null){
+				String [] linhas = row.split("#");
 				PontoDeTaxi ponto =  new PontoDeTaxi();
 				ponto.setNomeDoPonto(linhas[0]);
 				ponto.setLatitude(linhas[1]);
 				ponto.setLongitude(linhas[2]);
 				ponto.setDataCadastro(linhas[3]);
 				pontos.add(ponto);
-			});
+			}
+			csv.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -38,10 +45,11 @@ public class PontoDeTaxiService {
 		try {
 			String novaLinha = pontoDeTaxi.getNomeDoPonto() + "#" + pontoDeTaxi.getLatitude()
 						+ "#" + pontoDeTaxi.getLongitude() + "#" + pontoDeTaxi.getDataCadastro();
-			FileWriter fw = new FileWriter( Paths.get("disys.csv").toFile(), true );
+			FileWriter fw = new FileWriter("disys.csv", true );
 			BufferedWriter bw = new BufferedWriter( fw );
 			bw.newLine();
 			bw.write(novaLinha);
+			fw.flush();
 			bw.close();
 			fw.close();
 		} catch (IOException e) {

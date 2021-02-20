@@ -1,16 +1,12 @@
-version: '3'
+version: '3.9'
 services:
   app:
     build: .
     container_name: disys
-    restart: always
-    volumes:
-      - myapp:/home/node/app
     depends_on:
       - database
     ports:
       - 8080:8080
-      
   database:
     image: "postgres"
     ports:
@@ -19,6 +15,5 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=disys
-volumes:
-  myapp:
+
    
