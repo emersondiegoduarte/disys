@@ -42,6 +42,7 @@ public class ItinerarioService {
 		if(stream.findAny().isPresent()) {
 			return null;
 		}
+		itinerario.getCoordenadas().stream().forEach(coordenada -> coordenada.setItinerario(itinerario));
 		itinerarioExistente = itinerario;
 		itinerarioRepository.save(itinerarioExistente);
 		return itinerarioExistente;
